@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="css/estilo.css">
+		<title>Login</title>
+	</head>
+	<body style="background-color: #7d9dbd;">
+
+		<h1 class="text-center text-light fw-bolder my-4"><i class="fas fa-link"></i> Keep My Links</h1>
+
+		<div id="login" class="mx-auto m-5 bg-light rounded shadow-lg p-4">
+			<h1>Login</h1>
+			<hr>
+			<form method="POST" action="php/login.php">
+			  <div class="mb-3">
+			    <label for="username" class="form-label">Nome de usuário</label>
+			    <input type="text" name="username" class="form-control" id="username" placeholder="Insira seu nome de usuário">
+			  </div>
+			  <div class="mb-3">
+			    <label for="senha" class="form-label">Senha</label>
+			    <input type="password" name="senha" class="form-control" id="senha" placeholder="Insira sua senha">
+			  </div>
+			  <div class="text-end">
+			  	<a href="cadastro.php" class="text-decoration-none">Criar conta</a>
+			  </div>
+			  <input type="submit" name="entrar" value="Entrar" class="btn btn-primary">
+			</form>
+		</div>
+
+
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
+	</body>
+</html>
