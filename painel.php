@@ -7,6 +7,10 @@
   } else {
     header("Location:index.html");
   }
+
+  $connect = mysqli_connect('localhost','root','', 'keepmylinks');
+  $verifica = mysqli_query($connect, "SELECT * FROM videos WHERE usuario = '$login_cookie'") or die("Erro ao selecionar");
+  $quantidade = mysqli_num_rows($verifica);
 ?>
 
 <!DOCTYPE html>
@@ -15,12 +19,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/estilo.css">
     <title>Keep My Links - Home</title>
   </head>
   <body style="margin-top: 56px;">
     
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-info fixed-top shadow-lg">
+    <nav id="menu" class="navbar navbar-expand-lg navbar-dark fixed-top shadow-lg" style="background-color: #7d9dbd;">
       <div class="container-fluid">
         <a class="navbar-brand" href="#"><i class="fa fa-link"></i> KML</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +44,7 @@
               </button>
             </li>
             <li class="nav-item mx-2 my-1">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-excluir">
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-excluir">
                 <i class="fa fa-trash"></i> Excluir
               </button>
             </li>
@@ -63,12 +68,62 @@
 
 
     <div class="container">
-      <h4 class="text-center p-2 m-3 text-secondary">Todos os seus links</h4>
+      <h4 class="text-center p-2 m-3 text-secondary">Todos os seus links (<?php echo $quantidade; ?>)</h4>
+      <hr>
+      <p><i class="fa fa-filter text-secondary"></i> Filtros:</p>
+
+      <form id="filtros" class="row m-3" method="GET" action="painel.php">
+        <select name="nota" class="form-select col-md-2 m-1">
+          <option value="Nota" selected>Nota</option>
+          <option value="20">1 - 20</option>
+          <option value="40">21 - 40</option>
+          <option value="60">41 - 60</option>
+          <option value="80">61 - 80</option>
+          <option value="100">81 - 100</option>
+        </select>
+
+        <select name="duracao" class="form-select col-md-2 m-1">
+          <option value="Duracao" selected>Duração</option>
+          <option value="5">Até 5 min.</option>
+          <option value="10">Entre 5 e 10 min.</option>
+          <option value="15">Entre 10 e 15 min.</option>
+          <option value="20">Entre 15 e 20 min.</option>
+          <option value="30">Entre 20 e 30 min.</option>
+          <option value="31">Acima de 30 min.</option>
+        </select>
+
+        <select name="categoria" class="form-select col-md-2 m-1">
+          <option value="Categoria" selected>Categoria</option>
+          <?php
+            try {
+              $conn = new PDO('mysql:host=localhost;dbname=keepmylinks', 'root', '');
+              $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+              $login_cookie = $_COOKIE['username'];
+
+              $lista = array();
+              $consulta = $conn->query("SELECT categoria, nome FROM videos WHERE usuario='{$login_cookie}';");
+              while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                if(!in_array($linha['categoria'], $lista)){
+                  array_push($lista, $linha['categoria']);
+                }
+              }
+              for ($i=0; $i < count($lista); $i++) { 
+                  echo "<option value='{$lista[$i]}'>{$lista[$i]}</option>";
+              }
+            } catch(PDOException $e) {
+                echo 'ERROR: ' . $e->getMessage();
+            }
+          ?>
+        </select>
+
+        <input class="btn btn-outline-primary m-1 col-md-2" type="submit" value="Aplicar">
+      </form>
+
       <hr>
 
       <table id="tabela" class="table table-striped table-hover">
         <thead>
-          <tr id="cabecalho-tabela" class="text-light bg-secondary">
+          <tr id="cabecalho-tabela" class="text-light" style="background-color: #7d9dbd;">
             <th scope="col"><i class='fa fa-list'></i> ID</th>
             <th scope="col" class="text-center"><i class='fa fa-signature'></i> Nome</th>
             <th scope="col" class='text-center'><i class='fa fa-link'></i> Link</th>
@@ -80,20 +135,62 @@
         <tbody>
           <?php
             try {
-                $consulta = $conn->query("SELECT * FROM videos WHERE usuario='{$login_cookie}';");
-                while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                  echo "
-                  <tr>
-                    <td>{$linha['id']}</td>
-                    <td class='text-center'>{$linha['nome']}</td>
-                    <td class='text-center'><a target='_blank' href='{$linha['link']}'>Assistir</a></td>
-                    <td class='text-center'>{$linha['duracao']}</td>
-                    <td class='text-center'>{$linha['nota']}</td>
-                    <td class='text-center'>{$linha['categoria']}</td>
-                  </tr>";
+              $q = "SELECT * FROM videos WHERE usuario='{$login_cookie}'";
+
+              // Aplicação dos filtros
+              if (isset($_GET['nota'])) {
+                if ($_GET['nota']=='Nota') {
+                  $a = '';
+                } else {
+                  $max = intval($_GET['nota']);
+                  $min = $max - 19;
+                  $q = $q . " AND nota BETWEEN {$min} AND {$max}";
+                }
               }
+
+              if (isset($_GET['duracao'])) {
+                if ($_GET['duracao']=='Duracao') {
+                  $a = '';
+                } else {
+                  $max = intval($_GET['duracao']);
+                  if ($max==30) {
+                    $min = $max - 10;
+                    $q = $q . " AND duracao BETWEEN {$min} AND {$max}";
+                  } elseif ($max==31) {
+                    $min = 30;
+                    $q = $q . " AND duracao > {$min}";
+                  } else {
+                    $min = $max - 5;
+                    $q = $q . " AND duracao BETWEEN {$min} AND {$max}";
+                  }
+                }
+              }
+
+              if (isset($_GET['categoria'])) {
+                if ($_GET['categoria']=='Categoria') {
+                  $a = '';
+                } else {
+                  $categoria = $_GET['categoria'];
+                  $q = $q . " AND categoria='{$categoria}'";
+                }
+              }
+
+              $q = $q . ";";
+
+              $consulta = $conn->query($q);
+              while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                echo "
+                <tr>
+                  <td>{$linha['id']}</td>
+                  <td class='text-center'>{$linha['nome']}</td>
+                  <td class='text-center'><a target='_blank' href='{$linha['link']}'>Assistir</a></td>
+                  <td class='text-center'>{$linha['duracao']}</td>
+                  <td class='text-center'>{$linha['nota']}</td>
+                  <td class='text-center'>{$linha['categoria']}</td>
+                </tr>";
+            }
             } catch(PDOException $e) {
-                echo 'ERROR: ' . $e->getMessage();
+              echo 'ERROR: ' . $e->getMessage();
             }
             ?>
         </tbody>
