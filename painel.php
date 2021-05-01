@@ -70,7 +70,14 @@
     <div class="container">
       <h4 class="text-center p-2 m-3 text-secondary">Todos os seus links (<?php echo $quantidade; ?>)</h4>
       <hr>
-      <p><i class="fa fa-filter text-secondary"></i> Filtros:</p>
+      <p><i class="fa fa-filter text-secondary"></i> Filtros:
+        <?php
+          if(isset($_GET['nota']) or isset($_GET['duracao']) or isset($_GET['categoria'])){
+            echo "<a href='painel.php' class='btn btn-outline-danger m-3'>Limpar filtros</a>";
+          }
+        ?>
+      </p>
+
 
       <form id="filtros" class="row m-3" method="GET" action="painel.php">
         <select name="nota" class="form-select col-md-2 m-1">
