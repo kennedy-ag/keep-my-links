@@ -7,10 +7,6 @@
   } else {
     header("Location:index.html");
   }
-
-  $connect = mysqli_connect('localhost','root','', 'keepmylinks');
-  $verifica = mysqli_query($connect, "SELECT * FROM videos WHERE usuario = '$login_cookie'") or die("Erro ao selecionar");
-  $quantidade = mysqli_num_rows($verifica);
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +64,7 @@
 
 
     <div class="container">
-      <h4 class="text-center p-2 m-3 text-secondary">Todos os seus links (<?php echo $quantidade; ?>)</h4>
+      <h4 id="quantidade-de-registros" class="text-center p-2 m-3 text-secondary"></h4>
       <hr>
       <p><i class="fa fa-filter text-secondary"></i> Filtros:
         <?php
@@ -103,10 +99,6 @@
           <option value="Categoria" selected>Categoria</option>
           <?php
             try {
-              $conn = new PDO('mysql:host=localhost;dbname=keepmylinks', 'root', '');
-              $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-              $login_cookie = $_COOKIE['username'];
-
               $lista = array();
               $consulta = $conn->query("SELECT categoria, nome FROM videos WHERE usuario='{$login_cookie}';");
               while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
@@ -125,8 +117,15 @@
 
         <input class="btn btn-outline-primary m-1 col-md-2" type="submit" value="Aplicar">
       </form>
-
       <hr>
+
+      <div class="container">
+        <div id="w-escolha-aleatoria">
+          <table id="escolha-aleatoria" class="table"></table>
+        </div>
+        <button id="pick-random" onclick="escolher()" class="btn btn-success my-3 d-flex ms-auto"><i class='fa fa-dice me-2'></i>Aleatório</button>
+      </div>
+
 
       <table id="tabela" class="table table-striped table-hover">
         <thead>
@@ -187,7 +186,7 @@
               $consulta = $conn->query($q);
               while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
                 echo "
-                <tr>
+                <tr class='registro'>
                   <td>{$linha['id']}</td>
                   <td class='text-center'>{$linha['nome']}</td>
                   <td class='text-center'><a target='_blank' href='{$linha['link']}'>Assistir</a></td>
@@ -327,5 +326,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
     <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>
