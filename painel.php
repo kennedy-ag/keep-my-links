@@ -321,6 +321,7 @@
     </div>
 
     <a id="back-to-top" href="#">^</a>
+    <a id="to-dados" href="/dados.php"><i class="fa fa-chart-bar"></i></a>
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
