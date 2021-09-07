@@ -20,7 +20,7 @@ jQuery(document).ready(function(){
 
 function escolher(){
   let registros = document.getElementsByClassName('registro');
-  let escolha = Math.floor(Math.random() * (registros.length - 0)) + 0;
-  document.querySelector('#w-escolha-aleatoria').classList.add("p-2", "shadow-sm", "rounded", "border");
+  let escolha = Math.floor(Math.random() * registros.length) + 1;
+  document.querySelector('#w-escolha-aleatoria').classList.add("p-2", "shadow-sm", "rounded", "border", "my-4");
   document.getElementById('escolha-aleatoria').innerHTML = registros[escolha-1].innerHTML;
 }

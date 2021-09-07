@@ -18,10 +18,10 @@
     <link rel="stylesheet" type="text/css" href="css/estilo.css">
     <title>Keep My Links - Home</title>
   </head>
-  <body style="margin-top: 56px;">
+  <body class="contraste" style="margin-top: 56px; padding-bottom: 70px;">
     
 
-    <nav id="menu" class="navbar navbar-expand-lg navbar-dark fixed-top shadow-lg" style="background-color: #7d9dbd;">
+    <nav id="menu" class="navbar navbar-expand-lg navbar-dark fixed-top shadow-lg" style="background-color: #44475a;">
       <div class="container-fluid">
         <a class="navbar-brand" href="#"><i class="fa fa-link"></i> KML</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,12 +30,17 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item mx-2 my-1">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-adicionar">
+              <button id="contraste" type="button" class="btn contraste" onclick="alterar_contraste();">
+                <i class="fa fa-adjust"></i> Alterar tema
+              </button>
+            </li>
+            <li class="nav-item mx-2 my-1">
+              <button type="button" class="btn contraste" data-bs-toggle="modal" data-bs-target="#modal-adicionar">
                 <i class="fa fa-plus"></i> Novo
               </button>
             </li>
             <li class="nav-item mx-2 my-1">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-atualizar">
+              <button type="button" class="btn contraste" data-bs-toggle="modal" data-bs-target="#modal-atualizar">
                 <i class="fa fa-edit"></i> Atualizar
               </button>
             </li>
@@ -50,7 +55,7 @@
 
     <div class="container-fluid p-3">
 
-      <div class="dropdown">
+      <div class="dropdown" style="color: blue;">
           <i class="fa fa-user"></i> Logado como: &nbsp;
           <a class="dropdown-toggle text-decoration-none" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <strong><?php echo $login_cookie; ?></strong>
@@ -65,71 +70,82 @@
 
     <div class="container">
       <h4 id="quantidade-de-registros" class="text-center p-2 m-3 text-secondary"></h4>
-      <hr>
-      <p><i class="fa fa-filter text-secondary"></i> Filtros:
-        <?php
-          if(isset($_GET['nota']) or isset($_GET['duracao']) or isset($_GET['categoria'])){
-            echo "<a href='painel.php' class='btn btn-outline-danger m-3'>Limpar filtros</a>";
-          }
-        ?>
-      </p>
 
-
-      <form id="filtros" class="row m-3" method="GET" action="painel.php">
-        <select name="nota" class="form-select col-md-2 m-1">
-          <option value="Nota" selected>Nota</option>
-          <option value="20">1 - 20</option>
-          <option value="40">21 - 40</option>
-          <option value="60">41 - 60</option>
-          <option value="80">61 - 80</option>
-          <option value="100">81 - 100</option>
-        </select>
-
-        <select name="duracao" class="form-select col-md-2 m-1">
-          <option value="Duracao" selected>Duração</option>
-          <option value="5">Até 5 min.</option>
-          <option value="10">Entre 5 e 10 min.</option>
-          <option value="15">Entre 10 e 15 min.</option>
-          <option value="20">Entre 15 e 20 min.</option>
-          <option value="30">Entre 20 e 30 min.</option>
-          <option value="31">Acima de 30 min.</option>
-        </select>
-
-        <select name="categoria" class="form-select col-md-2 m-1">
-          <option value="Categoria" selected>Categoria</option>
+      <div id="filters" class="p-3">
+        <p class="contraste"><i class="fa fa-filter text-secondary"></i> Filtros:
           <?php
-            try {
-              $lista = array();
-              $consulta = $conn->query("SELECT categoria, nome FROM videos WHERE usuario='{$login_cookie}';");
-              while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                if(!in_array($linha['categoria'], $lista)){
-                  array_push($lista, $linha['categoria']);
-                }
-              }
-              for ($i=0; $i < count($lista); $i++) { 
-                  echo "<option value='{$lista[$i]}'>{$lista[$i]}</option>";
-              }
-            } catch(PDOException $e) {
-                echo 'ERROR: ' . $e->getMessage();
+            if(isset($_GET['nota']) or isset($_GET['duracao']) or isset($_GET['categoria'])){
+              echo "<a href='painel.php' class='btn btn-outline-danger m-3'>Limpar filtros</a>";
             }
           ?>
-        </select>
+        </p>
 
-        <input class="btn btn-outline-primary m-1 col-md-2" type="submit" value="Aplicar">
-      </form>
-      <hr>
+        <form id="filtros" class="row m-3" method="GET" action="painel.php">
+          <select name="nota" class="form-select col-md-2 m-1 sel">
+            <option value="Nota" selected>Nota</option>
+            <option value="20">1 - 20</option>
+            <option value="40">21 - 40</option>
+            <option value="60">41 - 60</option>
+            <option value="80">61 - 80</option>
+            <option value="100">81 - 100</option>
+          </select>
+
+          <select name="duracao" class="form-select col-md-2 m-1 sel">
+            <option value="Duracao" selected>Duração</option>
+            <option value="5">Até 5 min.</option>
+            <option value="10">Entre 5 e 10 min.</option>
+            <option value="15">Entre 10 e 15 min.</option>
+            <option value="20">Entre 15 e 20 min.</option>
+            <option value="30">Entre 20 e 30 min.</option>
+            <option value="31">Acima de 30 min.</option>
+          </select>
+
+          <select name="categoria" class="form-select col-md-2 m-1 sel">
+            <option value="Categoria" selected>Categoria</option>
+            <?php
+              try {
+                $lista = array();
+                $consulta = $conn->query("SELECT categoria, nome FROM videos WHERE usuario='{$login_cookie}';");
+                while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                  if(!in_array($linha['categoria'], $lista)){
+                    array_push($lista, $linha['categoria']);
+                  }
+                }
+                for ($i=0; $i < count($lista); $i++) { 
+                    echo "<option value='{$lista[$i]}'>{$lista[$i]}</option>";
+                }
+              } catch(PDOException $e) {
+                  echo 'ERROR: ' . $e->getMessage();
+              }
+            ?>
+          </select>
+
+          <input class="btn btn-outline-primary m-1 col-md-2" type="submit" value="Aplicar">
+        </form>
+      </div>
 
       <div class="container">
         <div id="w-escolha-aleatoria">
-          <table id="escolha-aleatoria" class="table"></table>
+          <table id="escolha-aleatoria" class="table contraste"></table>
         </div>
-        <button id="pick-random" onclick="escolher()" class="btn btn-success my-3 d-flex ms-auto"><i class='fa fa-dice me-2'></i>Aleatório</button>
+
+        <nav class="navbar navbar-expand-lg navbar-light">
+          <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <form class="d-flex ms-auto">
+                <input class="form-control me-2" name="busca" type="search" placeholder="Digite sua busca">
+                <button class="btn btn-outline-primary me-2" type="submit">Pesquisar</button>
+              </form>
+              <button id="pick-random" onclick="escolher()" class="btn my-4 contraste"><i class='fa fa-dice me-2'></i>Aleatório</button>
+            </div>
+          </div>
+        </nav>
       </div>
 
 
       <table id="tabela" class="table table-striped table-hover">
         <thead>
-          <tr id="cabecalho-tabela" class="text-light" style="background-color: #7d9dbd;">
+          <tr id="cabecalho-tabela" class="text-light" style="background-color: #44475a;">
             <th scope="col"><i class='fa fa-list'></i> ID</th>
             <th scope="col" class="text-center"><i class='fa fa-signature'></i> Nome</th>
             <th scope="col" class='text-center'><i class='fa fa-link'></i> Link</th>
@@ -178,6 +194,15 @@
                 } else {
                   $categoria = $_GET['categoria'];
                   $q = $q . " AND categoria='{$categoria}'";
+                }
+              }
+
+              if (isset($_GET['busca'])) {
+                if ($_GET['busca']=='') {
+                  $a = '';
+                } else {
+                  $busca = $_GET['busca'];
+                  $q = $q . " AND nome LIKE '%{$busca}%'";
                 }
               }
 
@@ -328,5 +353,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
     <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
     <script src="js/script.js"></script>
+
+    <!-- Função de alterar tema -->
+    <script>
+      function alterar_contraste(){
+        let elementos = document.getElementsByClassName('contraste');
+        let tema = document.getElementsByClassName('dk');
+        
+        if(tema[0]===undefined){
+          document.querySelector('.contraste').classList.add("dk");
+          document.querySelector('p.contraste').classList.add("text-light");
+          document.querySelector('table.contraste').classList.add("text-light", "dk");
+          document.querySelector('#tabela').classList.add("table-dark");
+        } else {
+          document.querySelector('.contraste').classList.remove("dk");
+          document.querySelector('p.contraste').classList.remove("text-light");
+          document.querySelector('table.contraste').classList.remove("text-light", "dk");
+          document.querySelector('#tabela').classList.remove("table-dark");
+        }
+      }
+    </script>
+
   </body>
 </html>

@@ -40,9 +40,14 @@ a#back-to-top:hover{
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
 }
 
+div#filters{
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
 a#to-dados{
-  background-color: salmon;
-  opacity: 0.5;
+  background-color: #9320d6;
+  opacity: 0.7;
   transition: opacity 0.7s;
   position: fixed;
   bottom: 30px;
@@ -57,4 +62,24 @@ a#to-dados{
 a#to-dados:hover{
   opacity: 1;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+}
+
+.dk{
+  background-color: #282a36;
+}
+button.contraste{
+  background-color: #9320d6;
+  color: white;
+}
+button.contraste:hover{
+  color: white;
+  opacity: 0.9;
+}
+
+table.dk{
+  background-color: #35373b;
+}
+
+select.dk{
+  background-color: #35373b;
 }
