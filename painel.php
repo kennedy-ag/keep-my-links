@@ -19,6 +19,7 @@
     <title>Keep My Links - Home</title>
   </head>
   <body class="contraste" style="margin-top: 56px; padding-bottom: 70px;">
+    <p class="d-none" id="tema"></p>
     
 
     <nav id="menu" class="navbar navbar-expand-lg navbar-dark fixed-top shadow-lg" style="background-color: #44475a;">
@@ -129,17 +130,20 @@
           <table id="escolha-aleatoria" class="table contraste"></table>
         </div>
 
-        <nav class="navbar navbar-expand-lg navbar-light">
-          <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <form class="d-flex ms-auto">
+        <div class="container-fluid my-4">
+
+          <ul class="nav justify-content-end">
+            <li class="nav-item mx-2">
+              <form class="d-flex" method="GET" action="painel.php">
                 <input class="form-control me-2" name="busca" type="search" placeholder="Digite sua busca">
-                <button class="btn btn-outline-primary me-2" type="submit">Pesquisar</button>
+                <button class="btn btn-outline-primary" type="submit">Buscar</button>
               </form>
-              <button id="pick-random" onclick="escolher()" class="btn my-4 contraste"><i class='fa fa-dice me-2'></i>Aleatório</button>
-            </div>
-          </div>
-        </nav>
+            </li>
+            <li class="nav-item">
+              <button id="pick-random" onclick="escolher()" class="btn contraste"><i class='fa fa-dice me-2'></i>Aleatório</button>
+            </li>
+          </ul>
+        </div>
       </div>
 
 
@@ -365,12 +369,15 @@
           document.querySelector('p.contraste').classList.add("text-light");
           document.querySelector('table.contraste').classList.add("text-light", "dk");
           document.querySelector('#tabela').classList.add("table-dark");
+          document.getElementById('tema').innerHTML = 1;
         } else {
           document.querySelector('.contraste').classList.remove("dk");
           document.querySelector('p.contraste').classList.remove("text-light");
           document.querySelector('table.contraste').classList.remove("text-light", "dk");
           document.querySelector('#tabela').classList.remove("table-dark");
+          document.getElementById('tema').innerHTML = 0;
         }
+
       }
     </script>
 
