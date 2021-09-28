@@ -4,6 +4,7 @@
 
   if(isset($_COOKIE['username'])){
     $login_cookie = $_COOKIE['username'];
+    $tema_cookie = $_COOKIE['tema'];
   } else {
     header("Location:index.html");
   }
@@ -18,8 +19,7 @@
     <link rel="stylesheet" type="text/css" href="css/estilo.css">
     <title>Keep My Links - Home</title>
   </head>
-  <body class="contraste" style="margin-top: 56px; padding-bottom: 70px;">
-    <p class="d-none" id="tema"></p>
+  <body onload="alterar_contraste();" class="contraste" style="margin-top: 56px; padding-bottom: 70px;">
     
 
     <nav id="menu" class="navbar navbar-expand-lg navbar-dark fixed-top shadow-lg" style="background-color: #44475a;">
@@ -31,9 +31,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item mx-2 my-1">
-              <button id="contraste" type="button" class="btn contraste" onclick="alterar_contraste();">
-                <i class="fa fa-adjust"></i> Alterar tema
-              </button>
+              <form method='POST' action='/php/tema.php'>
+                <input type='number' name='theme' value='1' class='d-none'>
+                <button id="contraste" type="submit" class="btn contraste">
+                  <i class="fa fa-adjust"></i> Alterar tema
+                </button>
+              </form>
             </li>
             <li class="nav-item mx-2 my-1">
               <button type="button" class="btn contraste" data-bs-toggle="modal" data-bs-target="#modal-adicionar">
@@ -126,8 +129,10 @@
       </div>
 
       <div class="container">
+        <div class="table-responsive">
         <div id="w-escolha-aleatoria">
           <table id="escolha-aleatoria" class="table contraste"></table>
+        </div>
         </div>
 
         <div class="container-fluid my-4">
@@ -139,7 +144,7 @@
                 <button class="btn btn-outline-primary" type="submit">Buscar</button>
               </form>
             </li>
-            <li class="nav-item">
+            <li class="nav-item my-md-0 my-3">
               <button id="pick-random" onclick="escolher()" class="btn contraste"><i class='fa fa-dice me-2'></i>Aleatório</button>
             </li>
           </ul>
@@ -147,89 +152,91 @@
       </div>
 
 
-      <table id="tabela" class="table table-striped table-hover">
-        <thead>
-          <tr id="cabecalho-tabela" class="text-light" style="background-color: #44475a;">
-            <th scope="col"><i class='fa fa-list'></i> ID</th>
-            <th scope="col" class="text-center"><i class='fa fa-signature'></i> Nome</th>
-            <th scope="col" class='text-center'><i class='fa fa-link'></i> Link</th>
-            <th scope="col" class='text-center'><i class='fa fa-clock'></i> Duração</th>
-            <th scope="col" class='text-center'><i class='fa fa-sticky-note'></i> Nota</th>
-            <th scope="col" class='text-center'><i class='fa fa-bars'></i> Categoria</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-            try {
-              $q = "SELECT * FROM videos WHERE usuario='{$login_cookie}'";
+      <div class="table-responsive">
+        <table id="tabela" class="table table-striped table-hover">
+          <thead>
+            <tr id="cabecalho-tabela" class="text-light" style="background-color: #44475a;">
+              <th scope="col"><i class='fa fa-list'></i> ID</th>
+              <th scope="col" class="text-center"><i class='fa fa-signature'></i> Nome</th>
+              <th scope="col" class='text-center'><i class='fa fa-link'></i> Link</th>
+              <th scope="col" class='text-center'><i class='fa fa-clock'></i> Duração</th>
+              <th scope="col" class='text-center'><i class='fa fa-sticky-note'></i> Nota</th>
+              <th scope="col" class='text-center'><i class='fa fa-bars'></i> Categoria</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+              try {
+                $q = "SELECT * FROM videos WHERE usuario='{$login_cookie}'";
 
-              // Aplicação dos filtros
-              if (isset($_GET['nota'])) {
-                if ($_GET['nota']=='Nota') {
-                  $a = '';
-                } else {
-                  $max = intval($_GET['nota']);
-                  $min = $max - 19;
-                  $q = $q . " AND nota BETWEEN {$min} AND {$max}";
-                }
-              }
-
-              if (isset($_GET['duracao'])) {
-                if ($_GET['duracao']=='Duracao') {
-                  $a = '';
-                } else {
-                  $max = intval($_GET['duracao']);
-                  if ($max==30) {
-                    $min = $max - 10;
-                    $q = $q . " AND duracao BETWEEN {$min} AND {$max}";
-                  } elseif ($max==31) {
-                    $min = 30;
-                    $q = $q . " AND duracao > {$min}";
+                // Aplicação dos filtros
+                if (isset($_GET['nota'])) {
+                  if ($_GET['nota']=='Nota') {
+                    $a = '';
                   } else {
-                    $min = $max - 5;
-                    $q = $q . " AND duracao BETWEEN {$min} AND {$max}";
+                    $max = intval($_GET['nota']);
+                    $min = $max - 19;
+                    $q = $q . " AND nota BETWEEN {$min} AND {$max}";
                   }
                 }
-              }
 
-              if (isset($_GET['categoria'])) {
-                if ($_GET['categoria']=='Categoria') {
-                  $a = '';
-                } else {
-                  $categoria = $_GET['categoria'];
-                  $q = $q . " AND categoria='{$categoria}'";
+                if (isset($_GET['duracao'])) {
+                  if ($_GET['duracao']=='Duracao') {
+                    $a = '';
+                  } else {
+                    $max = intval($_GET['duracao']);
+                    if ($max==30) {
+                      $min = $max - 10;
+                      $q = $q . " AND duracao BETWEEN {$min} AND {$max}";
+                    } elseif ($max==31) {
+                      $min = 30;
+                      $q = $q . " AND duracao > {$min}";
+                    } else {
+                      $min = $max - 5;
+                      $q = $q . " AND duracao BETWEEN {$min} AND {$max}";
+                    }
+                  }
                 }
-              }
 
-              if (isset($_GET['busca'])) {
-                if ($_GET['busca']=='') {
-                  $a = '';
-                } else {
-                  $busca = $_GET['busca'];
-                  $q = $q . " AND nome LIKE '%{$busca}%'";
+                if (isset($_GET['categoria'])) {
+                  if ($_GET['categoria']=='Categoria') {
+                    $a = '';
+                  } else {
+                    $categoria = $_GET['categoria'];
+                    $q = $q . " AND categoria='{$categoria}'";
+                  }
                 }
+
+                if (isset($_GET['busca'])) {
+                  if ($_GET['busca']=='') {
+                    $a = '';
+                  } else {
+                    $busca = $_GET['busca'];
+                    $q = $q . " AND nome LIKE '%{$busca}%'";
+                  }
+                }
+
+                $q = $q . ";";
+
+                $consulta = $conn->query($q);
+                while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                  echo "
+                  <tr class='registro'>
+                    <td>{$linha['id']}</td>
+                    <td class='text-center'>{$linha['nome']}</td>
+                    <td class='text-center'><a target='_blank' href='{$linha['link']}'>Assistir</a></td>
+                    <td class='text-center'>{$linha['duracao']}</td>
+                    <td class='text-center'>{$linha['nota']}</td>
+                    <td class='text-center'>{$linha['categoria']}</td>
+                  </tr>";
               }
-
-              $q = $q . ";";
-
-              $consulta = $conn->query($q);
-              while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                echo "
-                <tr class='registro'>
-                  <td>{$linha['id']}</td>
-                  <td class='text-center'>{$linha['nome']}</td>
-                  <td class='text-center'><a target='_blank' href='{$linha['link']}'>Assistir</a></td>
-                  <td class='text-center'>{$linha['duracao']}</td>
-                  <td class='text-center'>{$linha['nota']}</td>
-                  <td class='text-center'>{$linha['categoria']}</td>
-                </tr>";
-            }
-            } catch(PDOException $e) {
-              echo 'ERROR: ' . $e->getMessage();
-            }
-            ?>
-        </tbody>
-      </table>
+              } catch(PDOException $e) {
+                echo 'ERROR: ' . $e->getMessage();
+              }
+              ?>
+          </tbody>
+        </table>
+      </div>
     </div>
 
 
@@ -364,18 +371,16 @@
         let elementos = document.getElementsByClassName('contraste');
         let tema = document.getElementsByClassName('dk');
         
-        if(tema[0]===undefined){
+        if('1'==<?php echo $tema_cookie; ?>){
           document.querySelector('.contraste').classList.add("dk");
           document.querySelector('p.contraste').classList.add("text-light");
           document.querySelector('table.contraste').classList.add("text-light", "dk");
           document.querySelector('#tabela').classList.add("table-dark");
-          document.getElementById('tema').innerHTML = 1;
         } else {
           document.querySelector('.contraste').classList.remove("dk");
           document.querySelector('p.contraste').classList.remove("text-light");
           document.querySelector('table.contraste').classList.remove("text-light", "dk");
           document.querySelector('#tabela').classList.remove("table-dark");
-          document.getElementById('tema').innerHTML = 0;
         }
 
       }

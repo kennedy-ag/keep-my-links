@@ -15,6 +15,7 @@ $connect = mysqli_connect('localhost','root','', 'keepmylinks');
         header('Location:../index.html');
       }else{
         setcookie('username', $username, time()+3600*24, '/');
+        setcookie('tema', '0', time()+3600*24, '/');
         header("Location:../painel.php");
       }
   }
