@@ -26,7 +26,7 @@ a#back-to-top{
   opacity: 0.5;
   transition: opacity 0.7s;
   position: fixed;
-  bottom: 100px;
+  bottom: 170px;
   right: 30px;
   padding: 3px 16px;
   border-radius: 100%;
@@ -36,6 +36,25 @@ a#back-to-top{
   text-decoration: none;
 }
 a#back-to-top:hover{
+  opacity: 1;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+}
+
+a#to-bot{
+  background-color: #696969;
+  opacity: 0.5;
+  transition: opacity 0.7s;
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  padding: 2px 18px;
+  border-radius: 100%;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 24pt;
+  text-decoration: none;
+}
+a#to-bot:hover{
   opacity: 1;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
 }

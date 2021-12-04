@@ -66,6 +66,7 @@
         </a>
 
         <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="/alterar_senha.php"><i class="fa fa-cog"></i> Alterar senha</a></li>
           <li><a class="dropdown-item" href="/php/logout.php"><i class="fa fa-sign-out-alt"></i> Sair</a></li>
         </ul>
       </div>
@@ -169,7 +170,7 @@
               try {
                 $q = "SELECT * FROM videos WHERE usuario='{$login_cookie}'";
 
-                // Aplicação dos filtros
+                // Aplicação dos filtros =====================================================>
                 if (isset($_GET['nota'])) {
                   if ($_GET['nota']=='Nota') {
                     $a = '';
@@ -212,7 +213,7 @@
                     $a = '';
                   } else {
                     $busca = $_GET['busca'];
-                    $q = $q . " AND nome LIKE '%{$busca}%'";
+                    $q = $q . " AND (nome LIKE '%{$busca}%' OR categoria LIKE '%{$busca}%')";
                   }
                 }
 
@@ -267,7 +268,25 @@
               </div>
               <div class="form-group my-3">
                 <label for="categoria-input">Categoria</label>
-                <input name="categoria" type="text" class="form-control" id="categoria-input" placeholder="Insira a categoria principal. Ex. games" required="required" maxlength="20">
+                <input list="categories" name="categoria" type="text" class="form-control" id="categoria-input" placeholder="Insira a categoria principal. Ex. games" required="required" maxlength="20">
+                <datalist id="categories">
+                <?php
+                  try {
+                    $lista = array();
+                    $consulta = $conn->query("SELECT categoria FROM videos WHERE usuario='{$login_cookie}';");
+                    while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                      if(!in_array($linha['categoria'], $lista)){
+                        array_push($lista, $linha['categoria']);
+                      }
+                    }
+                    for ($i=0; $i < count($lista); $i++) { 
+                        echo "<option value='{$lista[$i]}'>{$lista[$i]}</option>";
+                    }
+                  } catch(PDOException $e) {
+                      echo 'ERROR: ' . $e->getMessage();
+                  }
+                ?>
+                </datalist>
               </div>
               <hr>
               <button type="submit" class="btn btn-primary my-3 d-flex mx-auto">Adicionar</button>
@@ -357,7 +376,9 @@
     </div>
 
     <a id="back-to-top" href="#">^</a>
+    <a id="to-bot" href="#bot">v</a>
     <a id="to-dados" href="/dados.php"><i class="fa fa-chart-bar"></i></a>
+    <footer id="bot"></footer>
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
