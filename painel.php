@@ -88,11 +88,12 @@
         <form id="filtros" class="row m-3" method="GET" action="painel.php">
           <select name="nota" class="form-select col-md-2 m-1 sel">
             <option value="Nota" selected>Nota</option>
-            <option value="20">1 - 20</option>
-            <option value="40">21 - 40</option>
-            <option value="60">41 - 60</option>
-            <option value="80">61 - 80</option>
-            <option value="100">81 - 100</option>
+            <option value="60">51 - 60</option>
+            <option value="70">61 - 70</option>
+            <option value="80">71 - 80</option>
+            <option value="90">81 - 90</option>
+            <option value="100">91 - 100</option>
+            
           </select>
 
           <select name="duracao" class="form-select col-md-2 m-1 sel">
@@ -176,7 +177,7 @@
                     $a = '';
                   } else {
                     $max = intval($_GET['nota']);
-                    $min = $max - 19;
+                    $min = $max - 9;
                     $q = $q . " AND nota BETWEEN {$min} AND {$max}";
                   }
                 }
@@ -226,8 +227,8 @@
                     <td>{$linha['id']}</td>
                     <td class='text-center'>{$linha['nome']}</td>
                     <td class='text-center'><a target='_blank' href='{$linha['link']}'>Assistir</a></td>
-                    <td class='text-center'>{$linha['duracao']}</td>
-                    <td class='text-center'>{$linha['nota']}</td>
+                    <td class='text-center'>{$linha['duracao']} min.</td>
+                    <td class='text-center'>{$linha['nota']} pts</td>
                     <td class='text-center'>{$linha['categoria']}</td>
                   </tr>";
               }
@@ -260,11 +261,11 @@
               </div>
               <div class="form-group my-3">
                 <label for="duracao-input">Duração</label>
-                <input name="duracao" type="number" class="form-control" min="0" id="duracao-input" placeholder="Duração em minutos. Ex. 36" required="required">
+                <input name="duracao" type="number" class="form-control" min="0" id="duracao-input" placeholder="Duração em minutos. 0, se não se aplicar" required="required">
               </div>
               <div class="form-group my-3">
                 <label for="nota-input">Nota</label>
-                <input name="nota" type="text" class="form-control" id="nota-input" placeholder="Avalie o vídeo de 0 a 100" required="required" min="0" max="100">
+                <input name="nota" type="number" class="form-control" id="nota-input" placeholder="Avalie o vídeo de 0 a 100" required="required" min="0" max="100">
               </div>
               <div class="form-group my-3">
                 <label for="categoria-input">Categoria</label>
