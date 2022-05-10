@@ -214,7 +214,7 @@
                     $a = '';
                   } else {
                     $busca = $_GET['busca'];
-                    $q = $q . " AND (nome LIKE '%{$busca}%' OR categoria LIKE '%{$busca}%')";
+                    $q = $q . " AND (nome LIKE '%{$busca}%' OR categoria LIKE '%{$busca}%' OR link LIKE '%{$busca}%')";
                   }
                 }
 
@@ -224,12 +224,12 @@
                 while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
                   echo "
                   <tr class='registro'>
-                    <td>{$linha['id']}</td>
-                    <td class='text-center'>{$linha['nome']}</td>
-                    <td class='text-center'><a target='_blank' href='{$linha['link']}'>Assistir</a></td>
-                    <td class='text-center'>{$linha['duracao']} min.</td>
-                    <td class='text-center'>{$linha['nota']} pts</td>
-                    <td class='text-center'>{$linha['categoria']}</td>
+                    <td class='text-info fw-bolder p-3'>{$linha['id']}</td>
+                    <td class='text-center p-3'>{$linha['nome']}</td>
+                    <td class='text-center p-3'><a target='_blank' href='{$linha['link']}'>Visualizar</a></td>
+                    <td class='text-center p-3'>{$linha['duracao']} min.</td>
+                    <td class='text-center p-3'>{$linha['nota']} pts</td>
+                    <td class='text-center p-3'>{$linha['categoria']}</td>
                   </tr>";
               }
               } catch(PDOException $e) {
